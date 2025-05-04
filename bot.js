@@ -4,6 +4,7 @@ import { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerSt
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -12,6 +13,10 @@ const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => res.send('Bot is running!'));
 app.listen(PORT, () => console.log(`Web server running on port ${PORT}`));
+
+// Get the current directory in ES module mode
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const audioFilePath = path.join(__dirname, 'clip1.mp3');
 
