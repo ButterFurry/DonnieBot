@@ -79,11 +79,13 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 
   // Leave after inactivity or disable
   const cleanupInterval = setInterval(() => {
-    if (!donnieEnabled.get(guildId) || newState.channel.members.size <= 1) {
+    // Add a check to ensure `newState.channel` is valid
+    if (!donnieEnabled.get(guildId) || !newState.channel || newState.channel.members.size <= 1) {
       connection.destroy();
       clearInterval(cleanupInterval);
     }
   }, 5000);
 });
+
 
 client.login(process.env.DCTOKEN);
