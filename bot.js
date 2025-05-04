@@ -1,15 +1,19 @@
-const { Client, GatewayIntentBits, Partials } = require('discord.js');
-const {
-  joinVoiceChannel,
-  createAudioPlayer,
-  createAudioResource,
-  entersState,
-  VoiceConnectionStatus,
-  AudioPlayerStatus,
-} = require('@discordjs/voice');
-const fs = require('fs');
-const path = require('path');
-require('dotenv').config();
+import express from 'express';
+import { Client, GatewayIntentBits, Partials } from 'discord.js';
+import { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } from '@discordjs/voice';
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => res.send('Bot is running!'));
+app.listen(PORT, () => console.log(`Web server running on port ${PORT}`));
+
+const audioFilePath = path.join(__dirname, 'clip1.mp3');
 
 const client = new Client({
   intents: [
@@ -22,7 +26,6 @@ const client = new Client({
 });
 
 const donnieEnabled = new Map();
-const audioFilePath = path.join(__dirname, 'clip1.mp3');
 
 client.on('messageCreate', async (message) => {
   if (message.channel.name !== 'bot-commands' || message.author.bot) return;
@@ -63,7 +66,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 
   receiver.speaking.on('start', (userId) => {
     const user = newState.guild.members.cache.get(userId);
-    if (user && !user.user.bot && !player.state.status === AudioPlayerStatus.Playing) {
+    if (user && !user.user.bot && player.state.status !== AudioPlayerStatus.Playing) {
       const resource = createAudioResource(audioFilePath);
       player.play(resource);
     }
