@@ -1,1 +1,1 @@
-npm install discord.js @discordjs/voice ffmpeg-static dotenv
+npm install discord.js @discordjs/voice ffmpeg-static dotenv express
